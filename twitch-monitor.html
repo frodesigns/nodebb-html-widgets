@@ -1,0 +1,131 @@
+<div id="twitchMonitor">
+	<script type="text/javascript">
+		// comma seaprated channels
+		var channels = "defult,DhanRahl,ASAPstash,Zedzebes,Agriope,Hades_Flow,CdrRyanTV,VallunV";
+		
+		function getChannels() {
+			$.ajax({
+				type: "GET",
+				url: "https://api.twitch.tv/kraken/streams?channel=" + channels,
+				headers: {
+					'Client-ID': 'qk5b1984v6y9bs7ia978tuad7hqsty0'
+				},
+				dataType: "json",
+				cache: false,
+				timeout: 5000,		
+				success: function(data) {
+					var html = '';
+					
+					if (data.streams.length) {
+						$("#twitchMonitor").show();
+						
+						$.each(data.streams, function() {
+							html += '<a href="' + this.channel.url + '" target="_blank">';
+							html += '<span class="username">' + this.channel.display_name + '</span>';
+							html += '<span class="viewers">' + this.viewers + '<i class="fa fa-fw fa-eye"></i></span>';
+							html += '<span class="followers">' + this.channel.followers + '<i class="fa fa-fw fa-heart"></i></span>';
+							if (this.channel.logo) {
+								html += '<img class="logo" src="' + this.channel.logo + '">';
+							}
+							html += '<img class="preview" src="' + this.preview.large + '">';
+							html += '</a>';
+						});
+					} else {
+						$("#twitchMonitor").hide();
+					}
+					
+					$("#twitchMonitor .streams").html(html);
+				},
+				error: function() {
+
+				}
+			});
+		}
+
+		$(document).ready(function() {	
+			// get data on load
+			getChannels();
+			// get data every 30 seconds
+			setInterval(function() {
+				getChannels();
+			}, 30000);	
+		});
+	</script>
+
+	<style type="text/css">
+		#twitchMonitor { 
+			display: none;
+			padding: 10px 20px;
+		}
+		#twitchMonitor .streams {
+			display: flex;
+			flex-wrap: wrap;
+			margin: -5px;
+		}
+		#twitchMonitor a {
+			position: relative;
+			width: calc(25% - 10px);
+			margin: 5px;
+		}
+		#twitchMonitor a:only-of-type {
+			width: 242px;
+		}
+		#twitchMonitor img { 
+			max-width: 100%; 
+		}
+		#twitchMonitor .logo {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			width: 64px;
+		}
+		#twitchMonitor .username {
+			position: absolute;
+			top: 0;
+			left: 0;
+			padding: 5px;
+			color: #fff;
+			font-size: 20px;
+			text-shadow: -1px 0px 1px #000, 1px 0px 1px #000, 0px 1px 1px #000, 0px -1px 1px #000;
+		}
+		#twitchMonitor .viewers {
+			position: absolute;
+			top: 0;
+			right: 0;
+			padding: 5px;
+			color: #fff;
+			font-size: 20px;
+			text-shadow: -1px 0px 1px #000, 1px 0px 1px #000, 0px 1px 1px #000, 0px -1px 1px #000;
+		}
+		#twitchMonitor .followers {
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			padding: 5px;
+			color: #fff;
+			font-size: 18px;
+			text-shadow: -1px 0px 1px #000, 1px 0px 1px #000, 0px 1px 1px #000, 0px -1px 1px #000;
+		}
+		
+		@media (max-width: 900px) {
+			#twitchMonitor a, #twitchMonitor a:only-of-type {
+				width: calc(33% - 10px);
+			}
+		}
+		
+		@media (max-width: 740px) {
+			#twitchMonitor a, #twitchMonitor a:only-of-type {
+				width: calc(50% - 10px);
+			}
+		}
+		
+		@media (max-width: 500px) {
+			#twitchMonitor a, #twitchMonitor a:only-of-type {
+				width: calc(100% - 10px);
+			}
+		}
+	</style>
+
+	<h5>Twitch Streams</h5>
+	<div class="streams"></div>
+</div>
