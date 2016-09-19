@@ -17,19 +17,29 @@
 					var html = '';
 					
 					if (data.streams.length) {
-						$("#twitchMonitor").show();
+						var i = 0;
 						
 						$.each(data.streams, function() {
-							html += '<a href="' + this.channel.url + '" target="_blank">';
-							html += '<span class="username">' + this.channel.display_name + '</span>';
-							html += '<span class="viewers">' + this.viewers + '<i class="fa fa-fw fa-eye"></i></span>';
-							html += '<span class="followers">' + this.channel.followers + '<i class="fa fa-fw fa-heart"></i></span>';
-							if (this.channel.logo) {
-								html += '<img class="logo" src="' + this.channel.logo + '">';
+							if (this.game == "Guild Wars 2") {
+								html += '<a href="' + this.channel.url + '" target="_blank">';
+								html += '<span class="username">' + this.channel.display_name + '</span>';
+								html += '<span class="viewers">' + this.viewers + '<i class="fa fa-fw fa-eye"></i></span>';
+								html += '<span class="followers">' + this.channel.followers + '<i class="fa fa-fw fa-heart"></i></span>';
+								if (this.channel.logo) {
+									html += '<img class="logo" src="' + this.channel.logo + '">';
+								}
+								html += '<img class="preview" src="' + this.preview.large + '">';
+								html += '</a>';
+								
+								i++;
 							}
-							html += '<img class="preview" src="' + this.preview.large + '">';
-							html += '</a>';
 						});
+						
+						if (i > 0) {
+							$("#twitchMonitor").show();
+						} else {
+							$("#twitchMonitor").hide();
+						}
 					} else {
 						$("#twitchMonitor").hide();
 					}
