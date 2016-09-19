@@ -214,8 +214,9 @@
 		var kdrData;
 		var pieDataPpt;
 		var pieDataTotal;
+		var wvwSummaryInterval;
 
-		$(document).ready(function() {	
+		$(document).ready(function() {			
 			// get worlds list
 			$.ajax({
 				type: "GET",
@@ -230,13 +231,16 @@
 				
 				}
 			});
-			
+		
 			// get data on load
 			getData();
-			// get data every 30 seconds
-			setInterval(function() {
-				getData();
-			}, 30000);	
+				
+			if (!wvwSummaryInterval) {
+				// get data every 30 seconds
+				wvwSummaryInterval = setInterval(function() {
+					getData();
+				}, 30000);	
+			}
 		});
 	</script>
 

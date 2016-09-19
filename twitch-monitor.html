@@ -51,14 +51,19 @@
 				}
 			});
 		}
+		
+		var twitchMonitorInterval;
 
-		$(document).ready(function() {	
+		$(document).ready(function() {			
 			// get data on load
 			getChannels();
-			// get data every 30 seconds
-			setInterval(function() {
-				getChannels();
-			}, 30000);	
+				
+			if (!twitchMonitorInterval) {
+				// get data every 30 seconds
+				twitchMonitorInterval = setInterval(function() {
+					getChannels();
+				}, 30000);	
+			}
 		});
 	</script>
 
