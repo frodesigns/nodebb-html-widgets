@@ -10,37 +10,37 @@
 			});
 			return name;
 		}
-		
+
 		function makeSVG(tag, attrs) {
 			var el= document.createElementNS('http://www.w3.org/2000/svg', tag);
 			for (var k in attrs)
 				el.setAttribute(k, attrs[k]);
 			return el;
 		}
-		
+
 		function drawChart(object, data){
-			object.empty(); 
-			
+			object.empty();
+
 			var paper = object[0];
 			var paperSize = object.width();
 			object.css("height", paperSize + "px");
-			
+
 			var total = data.reduce(function (accu, that) { return that + accu; }, 0);
-			var sectorAngleArr = data.map(function (v) { 
-				return 360 * v / total; 
+			var sectorAngleArr = data.map(function (v) {
+				return 360 * v / total;
 			});
 			var colour = ["blue", "green", "red"];
-			
+
 			var defs = makeSVG("defs")
 			paper.appendChild(defs, {});
-			
+
 			var bg = makeSVG("image", {width:paperSize, height:paperSize});
 			bg.setAttributeNS('http://www.w3.org/1999/xlink','href',"/pie/bg.png");
 			paper.appendChild(bg);
-			
+
 			var startAngle = 0;
 			var endAngle =-90;
-			
+
 			for (var i=0; i<3; i++){
 				var bg = makeSVG("image", {"class":"worldbg","data-score":data[i], "data-color":colour[i], width:paperSize, height:paperSize, "clip-path":"url(#"+paper.id+i+")"});
 				bg.setAttributeNS('http://www.w3.org/1999/xlink','href',"/pie/"+i+".png");
@@ -55,7 +55,7 @@
 				y1 = parseInt(Math.round((paperSize / 2) + ((paperSize / 2))*Math.sin(Math.PI*startAngle/180)));
 				x2 = parseInt(Math.round((paperSize / 2) + ((paperSize / 2))*Math.cos(Math.PI*endAngle/180)));
 				y2 = parseInt(Math.round((paperSize / 2) + ((paperSize / 2))*Math.sin(Math.PI*endAngle/180)));
-				
+
 				if (x2 >= (paperSize - 1) / 2) {
 					x2 = x2 - .1;
 				}
@@ -66,29 +66,29 @@
 				defs.appendChild(clipPath);
 				var arc = makeSVG("path", {d: d});
 				clipPath.appendChild(arc);
-				
+
 				var line = makeSVG("image", {"class":"linediv",width:paperSize, height:paperSize, transform:"rotate("+ (endAngle + 90) +" " + (paperSize / 2) + " " + (paperSize / 2) + ")"});
 				line.setAttributeNS("http://www.w3.org/1999/xlink","href","/pie/l.png");
 				paper.appendChild(line);
 			}
 		}
-		
+
 		function getData() {
 			$.ajax({
 				type: "GET",
 				url: "https://api.guildwars2.com/v2/wvw/matches?world=1005",
 				dataType: "json",
 				cache: false,
-				timeout: 5000,		
+				timeout: 5000,
 				success: function(data) {
 					$("#wvwSummary").show();
-					
+
 					var container = $("#wvwSummary"),
 						red = $("#wvwSummary .red"),
 						blue = $("#wvwSummary .blue"),
 						green = $("#wvwSummary .green");
-						
-					
+
+
 					// world names
 					var redWorldHtml = getWorldName(data.worlds.red);
 					if (data.all_worlds.red.length > 1) {
@@ -99,7 +99,7 @@
 						});
 					}
 					red.find(".worlds").html(redWorldHtml);
-					
+
 					var blueWorldHtml = getWorldName(data.worlds.blue);
 					if (data.all_worlds.blue.length > 1) {
 						$.each(data.all_worlds.blue, function() {
@@ -109,7 +109,7 @@
 						});
 					}
 					blue.find(".worlds").html(blueWorldHtml);
-					
+
 					var greenWorldHtml = getWorldName(data.worlds.green);
 					if (data.all_worlds.green.length > 1) {
 						$.each(data.all_worlds.green, function() {
@@ -119,17 +119,17 @@
 						});
 					}
 					green.find(".worlds").html(greenWorldHtml);
-					
-					
+
+
 					// ppt
 					var redPpt = 0,
 						bluePpt = 0,
 						greenPpt = 0;
-					
+
 					$.each(data.maps, function() {
 						$.each(this.objectives, function() {
 							var points = 0;
-							
+
 							if (this.type == "Castle") {
 								points = 12;
 							} else if (this.type == "Keep") {
@@ -139,7 +139,7 @@
 							} else if (this.type == "Camp") {
 								points = 2;
 							}
-							
+
 							if (this.owner == "Red") {
 								redPpt += points;
 							} else if (this.owner == "Blue") {
@@ -149,46 +149,46 @@
 							}
 						});
 					});
-					
+
 					pieDataPpt = [bluePpt, greenPpt, redPpt];
-					
+
 					red.find(".ppt").html('+' + redPpt);
 					blue.find(".ppt").html('+' + bluePpt);
 					green.find(".ppt").html('+' + greenPpt);
-					
-					
+
+
 					// score
 					red.find(".score").html(data.scores.red.toLocaleString('en'));
 					blue.find(".score").html(data.scores.blue.toLocaleString('en'));
 					green.find(".score").html(data.scores.green.toLocaleString('en'));
-					
+
 					pieDataTotal = [data.scores.blue, data.scores.green, data.scores.red];
-					
-					
+
+
 					// kills
 					red.find(".kills").html(data.kills.red.toLocaleString('en'));
 					blue.find(".kills").html(data.kills.blue.toLocaleString('en'));
 					green.find(".kills").html(data.kills.green.toLocaleString('en'));
-					
-					
+
+
 					// deaths
 					red.find(".deaths").html(data.deaths.red.toLocaleString('en'));
 					blue.find(".deaths").html(data.deaths.blue.toLocaleString('en'));
 					green.find(".deaths").html(data.deaths.green.toLocaleString('en'));
-					
-					
+
+
 					// kdr
 					var redKdr = (Math.round((data.kills.red / data.deaths.red) * 100) / 100).toFixed(2);
 					var blueKdr = (Math.round((data.kills.blue / data.deaths.blue) * 100) / 100).toFixed(2);
 					var greenKdr = (Math.round((data.kills.green / data.deaths.green) * 100) / 100).toFixed(2);
-					
+
 					kdrData =  [blueKdr * 100, greenKdr * 100, redKdr * 100];
-					
+
 					red.find(".kdr").html(redKdr);
 					blue.find(".kdr").html(blueKdr);
 					green.find(".kdr").html(greenKdr);
-					
-					
+
+
 					// sort by score
 					var array = [{key: 'red', value: data.scores.red}, {key: 'blue', value: data.scores.blue}, {key: 'green', value: data.scores.green}];
 					array.sort(function(obj1, obj2) {
@@ -197,49 +197,49 @@
 					$.each(array, function() {
 						$("#wvwSummary tbody tr." + this.key).prependTo("#wvwSummary tbody");
 					});
-					
-					
+
+
 					// render pie charts
 					drawChart($("#kdrChart"), kdrData);
 					drawChart($("#pptChart"), pieDataPpt);
-					drawChart($("#totalChart"), pieDataTotal);					
+					drawChart($("#totalChart"), pieDataTotal);
 				},
 				error: function() {
-				
+
 				}
 			});
 		}
-		
+
 		var worlds;
 		var kdrData;
 		var pieDataPpt;
 		var pieDataTotal;
 		var wvwSummaryInterval;
 
-		$(document).ready(function() {			
+		$(document).ready(function() {
 			// get worlds list
 			$.ajax({
 				type: "GET",
 				url: "https://api.guildwars2.com/v2/worlds?ids=all",
 				dataType: "json",
 				cache: false,
-				timeout: 5000,		
+				timeout: 5000,
 				success: function(data) {
 					worlds = data;
 				},
 				error: function() {
-				
+
 				}
 			});
-		
+
 			// get data on load
 			getData();
-				
+
 			if (!wvwSummaryInterval) {
 				// get data every 30 seconds
 				wvwSummaryInterval = setInterval(function() {
 					getData();
-				}, 30000);	
+				}, 30000);
 			}
 		});
 	</script>
@@ -259,12 +259,15 @@
 		}
 		#wvwSummary th {
 			text-align: left;
-			padding: 5px 10px;		
+			padding: 5px 10px;
 		}
 		#wvwSummary td {
 			text-align: left;
 			padding: 5px 10px;
-			vertical-align: top;		
+			vertical-align: top;
+		}
+		#wvwSummary td.worlds {
+			white-space: nowrap;
 		}
 		#wvwSummary small {
 			display: block;
@@ -287,29 +290,29 @@
 		#wvwSummary .chart strong {
 			display: block;
 		}
-		#wvwSummary svg { 
+		#wvwSummary svg {
 			display: block;
 			width: 102px;
 			height: 102px;
 		}
-		
-		@media (max-width: 340px) {			
-			#wvwSummary svg { 
+
+		@media (max-width: 340px) {
+			#wvwSummary svg {
 				width: 94px;
 				height: 94px;
-			}		
+			}
 		}
 	</style>
-	
+
 	<h5>WvW Summary</h5>
 	<div class="table-overflow">
 		<table>
 			<thead>
 				<tr>
 					<th>Team</th>
-					<th>KDR</th>				
+					<th>KDR</th>
 					<th>Kills</th>
-					<th>Deaths</th>				
+					<th>Deaths</th>
 					<th>PPT</th>
 					<th>Score</th>
 				</tr>
@@ -319,16 +322,16 @@
 					<td class="worlds"></td>
 					<td class="kdr"></td>
 					<td class="kills"></td>
-					<td class="deaths"></td>				
+					<td class="deaths"></td>
 					<td class="ppt"></td>
 					<td class="score"></td>
-					
+
 				</tr>
 				<tr class="team blue">
 					<td class="worlds"></td>
 					<td class="kdr"></td>
 					<td class="kills"></td>
-					<td class="deaths"></td>				
+					<td class="deaths"></td>
 					<td class="ppt"></td>
 					<td class="score"></td>
 				</tr>
@@ -343,17 +346,17 @@
 			</tbody>
 		</table>
 	</div>
-	
+
 	<div class="chart">
 		<strong>KDR</strong>
 		<svg id="kdrChart"></svg>
 	</div>
-	
+
 	<div class="chart">
 		<strong>PPT</strong>
 		<svg id="pptChart"></svg>
 	</div>
-	
+
 	<div class="chart">
 		<strong>Score</strong>
 		<svg id="totalChart"></svg>
