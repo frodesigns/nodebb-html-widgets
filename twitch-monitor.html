@@ -1,8 +1,8 @@
 <div id="twitchMonitor">
 	<script type="text/javascript">
 		// comma seaprated channels
-		var channels = "defult,DhanRahl,ASAPstash,Zedzebes,Agriope,Hades_Flow,CdrRyanTV,VallunV";
-		
+		var channels = "defult,DhanRahl,ASAPstash,Zedzebes,Agriope,Hades_Flow,CdrRyanTV,VallunV,coleragamer";
+
 		function getChannels() {
 			$.ajax({
 				type: "GET",
@@ -12,13 +12,13 @@
 				},
 				dataType: "json",
 				cache: false,
-				timeout: 5000,		
+				timeout: 5000,
 				success: function(data) {
 					var html = '';
-					
+
 					if (data.streams.length) {
 						var i = 0;
-						
+
 						$.each(data.streams, function() {
 							if (this.game == "Guild Wars 2") {
 								html += '<a href="' + this.channel.url + '" target="_blank">';
@@ -30,11 +30,11 @@
 								}
 								html += '<img class="preview" src="' + this.preview.large + '">';
 								html += '</a>';
-								
+
 								i++;
 							}
 						});
-						
+
 						if (i > 0) {
 							$("#twitchMonitor").show();
 						} else {
@@ -43,7 +43,7 @@
 					} else {
 						$("#twitchMonitor").hide();
 					}
-					
+
 					$("#twitchMonitor .streams").html(html);
 				},
 				error: function() {
@@ -51,24 +51,24 @@
 				}
 			});
 		}
-		
+
 		var twitchMonitorInterval;
 
-		$(document).ready(function() {			
+		$(document).ready(function() {
 			// get data on load
 			getChannels();
-				
+
 			if (!twitchMonitorInterval) {
 				// get data every 30 seconds
 				twitchMonitorInterval = setInterval(function() {
 					getChannels();
-				}, 30000);	
+				}, 30000);
 			}
 		});
 	</script>
 
 	<style type="text/css">
-		#twitchMonitor { 
+		#twitchMonitor {
 			display: none;
 			padding: 10px 20px;
 		}
@@ -85,8 +85,8 @@
 		#twitchMonitor a:only-of-type {
 			width: 242px;
 		}
-		#twitchMonitor img { 
-			max-width: 100%; 
+		#twitchMonitor img {
+			max-width: 100%;
 		}
 		#twitchMonitor .logo {
 			position: absolute;
@@ -121,19 +121,19 @@
 			font-size: 18px;
 			text-shadow: -1px 0px 1px #000, 1px 0px 1px #000, 0px 1px 1px #000, 0px -1px 1px #000;
 		}
-		
+
 		@media (max-width: 900px) {
 			#twitchMonitor a, #twitchMonitor a:only-of-type {
 				width: calc(33% - 10px);
 			}
 		}
-		
+
 		@media (max-width: 740px) {
 			#twitchMonitor a, #twitchMonitor a:only-of-type {
 				width: calc(50% - 10px);
 			}
 		}
-		
+
 		@media (max-width: 500px) {
 			#twitchMonitor a, #twitchMonitor a:only-of-type {
 				width: calc(100% - 10px);
