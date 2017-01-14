@@ -16,7 +16,7 @@
 							count = 0;
 
 						$.each(values, function(index, item) {
-							var date = new Date(item.publishedDate);
+							var date = new Date(item.pubDate);
 							var options = { year: 'numeric', month: 'long', day: 'numeric' };
 							var dateString = '';
 							dateString = date.toLocaleDateString('en-US', options);
