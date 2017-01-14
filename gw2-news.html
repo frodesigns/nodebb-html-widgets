@@ -1,35 +1,35 @@
 <div id="gw2News">
 	<script type="text/javascript">
-		$(document).ready(function() {	
+		$(document).ready(function() {
 			if (ajaxify.currentPage == 'category/2/general-gw2-discussion' || ajaxify.currentPage == 'category/1/announcements') {
 				var feed_url = 'https://www.guildwars2.com/en/feed/';
-				
+
 				$.ajax({
 					type: "GET",
-					url: document.location.protocol + '//ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=1000&callback=?&q=' + encodeURIComponent(feed_url),
+					url: 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(feed_url),
 					dataType: 'json',
 					success: function(data){
 						$("#gw2News").show();
-						
-						var values = data.responseData.feed.entries,
-							list = '', 
+
+						var values = data.items,
+							list = '',
 							count = 0;
-						
+
 						$.each(values, function(index, item) {
 							var date = new Date(item.publishedDate);
 							var options = { year: 'numeric', month: 'long', day: 'numeric' };
 							var dateString = '';
 							dateString = date.toLocaleDateString('en-US', options);
-							
+
 							if (count >= 5) {
 								return;
 							}
-							
+
 							list += '<div class="news-item"><a href="' + item.link + '">' + item.title + '</a> <br/><small>' + dateString + '</small></div>';
-							
+
 							count ++;
 						});
-						
+
 						$('#gw2News .news-feed').html(list);
 					}
 				});
@@ -38,10 +38,10 @@
 			}
 		});
 	</script>
-	
+
 	<style type="text/css">
-		#gw2News { 
-			display: none; 
+		#gw2News {
+			display: none;
 			padding-bottom: 20px;
 		}
 		#gw2News .news-feed {
@@ -54,14 +54,14 @@
 		#gw2News a {
 			font-size: 18px;
 		}
-		
-		@media (max-width: 767px) {			
+
+		@media (max-width: 767px) {
 			#gw2News .news-feed {
 				flex-wrap: wrap;
-			}			
+			}
 		}
 	</style>
-	
+
 	<h5>Official GW2 News</h5>
 	<div class="news-feed"></div>
 </div>
