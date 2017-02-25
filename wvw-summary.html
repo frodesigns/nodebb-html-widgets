@@ -128,17 +128,7 @@
 
 					$.each(data.maps, function() {
 						$.each(this.objectives, function() {
-							var points = 0;
-
-							if (this.type == "Castle") {
-								points = 12;
-							} else if (this.type == "Keep") {
-								points = 8;
-							} else if (this.type == "Tower") {
-								points = 4;
-							} else if (this.type == "Camp") {
-								points = 2;
-							}
+							var points = this.points_tick;
 
 							if (this.owner == "Red") {
 								redPpt += points;
