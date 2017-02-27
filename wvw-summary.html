@@ -35,7 +35,7 @@
 			paper.appendChild(defs, {});
 
 			var bg = makeSVG("image", {width:paperSize, height:paperSize});
-			bg.setAttributeNS('http://www.w3.org/1999/xlink','href',"/pie/bg.png");
+			bg.setAttributeNS('http://www.w3.org/1999/xlink','href',"/assets/pie/bg.png");
 			paper.appendChild(bg);
 
 			var startAngle = 0;
@@ -43,7 +43,7 @@
 
 			for (var i=0; i<3; i++){
 				var bg = makeSVG("image", {"class":"worldbg","data-score":data[i], "data-color":colour[i], width:paperSize, height:paperSize, "clip-path":"url(#"+paper.id+i+")"});
-				bg.setAttributeNS('http://www.w3.org/1999/xlink','href',"/pie/"+i+".png");
+				bg.setAttributeNS('http://www.w3.org/1999/xlink','href',"/assets/pie/"+i+".png");
 				paper.appendChild(bg);
 			}
 			for (var i=0; i<3; i++){
@@ -68,7 +68,7 @@
 				clipPath.appendChild(arc);
 
 				var line = makeSVG("image", {"class":"linediv",width:paperSize, height:paperSize, transform:"rotate("+ (endAngle + 90) +" " + (paperSize / 2) + " " + (paperSize / 2) + ")"});
-				line.setAttributeNS("http://www.w3.org/1999/xlink","href","/pie/l.png");
+				line.setAttributeNS("http://www.w3.org/1999/xlink","href","/assets/pie/l.png");
 				paper.appendChild(line);
 			}
 		}
