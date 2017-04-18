@@ -148,11 +148,11 @@
 
 
 					// score
-					red.find(".score").html(data.scores.red.toLocaleString('en'));
-					blue.find(".score").html(data.scores.blue.toLocaleString('en'));
-					green.find(".score").html(data.scores.green.toLocaleString('en'));
+					red.find(".score").html(data.victory_points.red.toLocaleString('en'));
+					blue.find(".score").html(data.victory_points.blue.toLocaleString('en'));
+					green.find(".score").html(data.victory_points.green.toLocaleString('en'));
 
-					pieDataTotal = [data.scores.blue, data.scores.green, data.scores.red];
+					pieDataTotal = [data.victory_points.blue, data.victory_points.green, data.victory_points.red];
 
 
 					// kills
@@ -180,7 +180,7 @@
 
 
 					// sort by score
-					var array = [{key: 'red', value: data.scores.red}, {key: 'blue', value: data.scores.blue}, {key: 'green', value: data.scores.green}];
+					var array = [{key: 'red', value: data.victory_points.red}, {key: 'blue', value: data.victory_points.blue}, {key: 'green', value: data.victory_points.green}];
 					array.sort(function(obj1, obj2) {
 					   return obj1.value - obj2.value;
 					});
@@ -304,7 +304,7 @@
 					<th>Kills</th>
 					<th>Deaths</th>
 					<th>PPT</th>
-					<th>Score</th>
+					<th>VP</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -348,7 +348,7 @@
 	</div>
 
 	<div class="chart">
-		<strong>Score</strong>
+		<strong>VP</strong>
 		<svg id="totalChart"></svg>
 	</div>
 </div>
